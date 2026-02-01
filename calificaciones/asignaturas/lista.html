@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Asignaturas - GesInfra{% endblock %}
+{% block page_icon %}fa-book{% endblock %}
+{% block page_title %}Gestión de Asignaturas{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'calificaciones:lista_asignaturas' %}">Asignaturas</a></li>
+<li class="breadcrumb-item active">Lista</li>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Lista de Asignaturas</h5>
+                <a href="{% url 'calificaciones:agregar_asignatura' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i> Nueva Asignatura
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- Filtros -->
+            <form method="get" class="row g-3 mb-4">
+                <div class="col-md-8">
+                    <input type="text" name="q" class="form-control" placeholder="Buscar asignatura..." 
+                           value="{{ query }}">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-1"></i> Buscar
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Tabla de asignaturas -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Asignatura</th>
+                            <th>Docente</th>
+                            <th>Horas Semanales</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for asignatura in asignaturas %}
+                        <tr>
+                            <td>A{{ asignatura.id_asignatura|stringformat:"03d" }}</td>
+                            <td>{{ asignatura.get_nombre_display }}</td>
+                            <td>{{ asignatura.docente.nombres_completos|default:"Sin asignar" }}</td>
+                            <td>{{ asignatura.horas_semanales }} horas</td>
+                            <td>
+                                <a href="{% url 'calificaciones:editar_asignatura' asignatura.id_asignatura %}" 
+                                   class="btn btn-sm btn-warning" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-danger" title="Eliminar"
+                                   onclick="return confirm('¿Está seguro de eliminar la asignatura {{ asignatura.get_nombre_display }}?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <div class="text-muted">
+                                    <i class="fas fa-book fa-2x mb-3"></i>
+                                    <p class="mb-0">No hay asignaturas registradas</p>
+                                    <p class="small">Ejecuta el script crear_asignaturas.py para cargar asignaturas predeterminadas</p>
+                                    <a href="{% url 'calificaciones:agregar_asignatura' %}" class="btn btn-primary mt-2">
+                                        <i class="fas fa-plus me-1"></i> Agregar Asignatura
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Información -->
+            <div class="mt-4">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Total de asignaturas: <strong>{{ asignaturas|length }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

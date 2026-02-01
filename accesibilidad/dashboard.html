@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Accesibilidad{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h1 class="card-title">
+                        <i class="fas fa-universal-access"></i> Módulo de Accesibilidad
+                    </h1>
+                    <p class="card-text">Sistema de evaluación de barreras en instituciones educativas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h1 class="display-4 text-primary">{{ total_instituciones }}</h1>
+                    <h5>Instituciones</h5>
+                    <a href="{% url 'accesibilidad:lista_instituciones' %}" class="btn btn-outline-primary btn-sm">
+                        Ver todas
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h1 class="display-4 text-success">{{ total_encuestas }}</h1>
+                    <h5>Encuestas</h5>
+                    <a href="{% url 'accesibilidad:lista_encuestas' %}" class="btn btn-outline-success btn-sm">
+                        Ver todas
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h1 class="display-4 text-warning">
+                        <i class="fas fa-plus"></i>
+                    </h1>
+                    <h5>Nueva Institución</h5>
+                    <a href="{% url 'accesibilidad:nueva_institucion' %}" class="btn btn-outline-warning btn-sm">
+                        Registrar
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h1 class="display-4 text-info">
+                        <i class="fas fa-clipboard-check"></i>
+                    </h1>
+                    <h5>Nueva Encuesta</h5>
+                    <a href="{% url 'accesibilidad:seleccionar_institucion' %}" class="btn btn-outline-info btn-sm">
+                        Crear
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-school"></i> Últimas Instituciones
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if instituciones %}
+                    <div class="list-group">
+                        {% for institucion in instituciones %}
+                        <a href="{% url 'accesibilidad:detalle_institucion' institucion.id %}" 
+                           class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ institucion.nombre_institucion }}</h6>
+                                <small>{{ institucion.fecha_registro|date:"d/m/Y" }}</small>
+                            </div>
+                            <small class="text-muted">
+                                {{ institucion.provincia }} - {{ institucion.canton }}
+                            </small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No hay instituciones registradas.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clipboard-list"></i> Últimas Encuestas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if encuestas %}
+                    <div class="list-group">
+                        {% for encuesta in encuestas %}
+                        <a href="{% url 'accesibilidad:detalle_encuesta' encuesta.id %}" 
+                           class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ encuesta.institucion.nombre_institucion }}</h6>
+                                <small>{{ encuesta.fecha_encuesta|date:"d/m/Y" }}</small>
+                            </div>
+                            <small class="text-muted">
+                                Encuestador: {{ encuesta.encuestador|default:"No especificado" }}
+                            </small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No hay encuestas registradas.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

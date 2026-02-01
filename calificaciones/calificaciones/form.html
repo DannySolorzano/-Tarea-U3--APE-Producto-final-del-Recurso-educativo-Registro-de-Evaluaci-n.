@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">📝 {{ titulo }}</h1>
+        <a href="{% url 'calificaciones:lista_calificaciones' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Encabezado con información básica -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Estudiante *</label>
+                            {{ form.estudiante }}
+                            {% if form.estudiante.errors %}
+                            <div class="text-danger">{{ form.estudiante.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Asignatura *</label>
+                            {{ form.asignatura }}
+                            {% if form.asignatura.errors %}
+                            <div class="text-danger">{{ form.asignatura.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Trimestre *</label>
+                            {{ form.trimestre }}
+                            {% if form.trimestre.errors %}
+                            <div class="text-danger">{{ form.trimestre.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de calificaciones similar a la imagen -->
+                <h5 class="mb-3">📊 Evaluación Formativa (70%)</h5>
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Actividad</th>
+                                <th>Puntaje (0-10)</th>
+                                <th>Fecha</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Lección Escrita 1</td>
+                                <td>
+                                    <input type="number" name="leccion1" class="form-control" min="0" max="10" step="0.1" 
+                                           value="{{ form.instance.leccion1|default:'' }}">
+                                </td>
+                                <td>
+                                    <input type="date" name="fecha_leccion1" class="form-control" 
+                                           value="{{ form.instance.fecha_leccion1|default:'' }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="obs_leccion1" class="form-control" 
+                                           value="{{ form.instance.obs_leccion1|default:'' }}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Lección Escrita 2</td>
+                                <td>
+                                    <input type="number" name="leccion2" class="form-control" min="0" max="10" step="0.1"
+                                           value="{{ form.instance.leccion2|default:'' }}">
+                                </td>
+                                <td>
+                                    <input type="date" name="fecha_leccion2" class="form-control"
+                                           value="{{ form.instance.fecha_leccion2|default:'' }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="obs_leccion2" class="form-control"
+                                           value="{{ form.instance.obs_leccion2|default:'' }}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Actividad Experiencial</td>
+                                <td>
+                                    <input type="number" name="actividad_experiencial" class="form-control" min="0" max="10" step="0.1"
+                                           value="{{ form.instance.actividad_experiencial|default:'' }}">
+                                </td>
+                                <td>
+                                    <input type="date" name="fecha_experiencial" class="form-control"
+                                           value="{{ form.instance.fecha_experiencial|default:'' }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="obs_experiencial" class="form-control"
+                                           value="{{ form.instance.obs_experiencial|default:'' }}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Proyecto Interdisciplinar</td>
+                                <td>
+                                    <input type="number" name="proyecto_inter" class="form-control" min="0" max="10" step="0.1"
+                                           value="{{ form.instance.proyecto_inter|default:'' }}">
+                                </td>
+                                <td>
+                                    <input type="date" name="fecha_proyecto" class="form-control"
+                                           value="{{ form.instance.fecha_proyecto|default:'' }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="obs_proyecto" class="form-control"
+                                           value="{{ form.instance.obs_proyecto|default:'' }}">
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-secondary">
+                                <td><strong>Promedio Formativo</strong></td>
+                                <td colspan="3">
+                                    <input type="number" name="promedio_formativo" class="form-control" 
+                                           value="{{ form.instance.promedio_formativo|default:'' }}" readonly>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- Evaluación Sumativa -->
+                <h5 class="mb-3">📝 Evaluación Sumativa (30%)</h5>
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Examen</th>
+                                <th>Puntaje (0-10)</th>
+                                <th>Fecha</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Examen Trimestral</td>
+                                <td>
+                                    <input type="number" name="examen" class="form-control" min="0" max="10" step="0.1"
+                                           value="{{ form.instance.examen|default:'' }}">
+                                </td>
+                                <td>
+                                    <input type="date" name="fecha_examen" class="form-control"
+                                           value="{{ form.instance.fecha_examen|default:'' }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="obs_examen" class="form-control"
+                                           value="{{ form.instance.obs_examen|default:'' }}">
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-secondary">
+                                <td><strong>Promedio Final</strong></td>
+                                <td colspan="3">
+                                    <input type="number" name="promedio_final_100" class="form-control" 
+                                           value="{{ form.instance.promedio_final_100|default:'' }}" readonly>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- Botones -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Guardar Calificación
+                    </button>
+                    <a href="{% url 'calificaciones:lista_calificaciones' %}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para calcular promedios automáticamente -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const calcularPromedios = () => {
+        // Calcular promedio formativo
+        const leccion1 = parseFloat(document.querySelector('input[name="leccion1"]').value) || 0;
+        const leccion2 = parseFloat(document.querySelector('input[name="leccion2"]').value) || 0;
+        const experiencia = parseFloat(document.querySelector('input[name="actividad_experiencial"]').value) || 0;
+        const proyecto = parseFloat(document.querySelector('input[name="proyecto_inter"]').value) || 0;
+        
+        const promedioFormativo = (leccion1 + leccion2 + experiencia + proyecto) / 4;
+        document.querySelector('input[name="promedio_formativo"]').value = promedioFormativo.toFixed(2);
+        
+        // Calcular promedio final (70% formativo + 30% sumativo)
+        const examen = parseFloat(document.querySelector('input[name="examen"]').value) || 0;
+        const promedioFinal = (promedioFormativo * 0.7) + (examen * 0.3);
+        document.querySelector('input[name="promedio_final_100"]').value = promedioFinal.toFixed(2);
+    };
+    
+    // Escuchar cambios en los inputs
+    const inputs = document.querySelectorAll('input[type="number"]');
+    inputs.forEach(input => {
+        input.addEventListener('input', calcularPromedios);
+    });
+    
+    // Calcular al cargar
+    calcularPromedios();
+});
+</script>
+{% endblock %}

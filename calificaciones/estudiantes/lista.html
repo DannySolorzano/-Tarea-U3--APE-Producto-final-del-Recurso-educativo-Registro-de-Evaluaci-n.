@@ -1,0 +1,101 @@
+<!-- templates/calificaciones/estudiantes/lista.html -->
+{% extends 'base.html' %}
+
+{% block title %}Estudiantes - GesInfra Web{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0"><i class="fas fa-users me-2"></i>Estudiantes</h1>
+    <a href="{% url 'calificaciones:agregar_estudiante' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Nuevo Estudiante
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <form method="get" class="d-flex">
+                    <input type="text" name="q" class="form-control me-2" placeholder="Buscar por nombre o cédula..." value="{{ query }}">
+                    <button type="submit" class="btn btn-outline-secondary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        {% if estudiantes %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre Completo</th>
+                        <th>Cédula</th>
+                        <th>Edad</th>
+                        <th>Sexo</th>
+                        <th>Nacionalidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for estudiante in estudiantes %}
+                    <tr>
+                        <td>{{ estudiante.id_estudiante }}</td>
+                        <td>{{ estudiante.nombres_completos }}</td>
+                        <td>{{ estudiante.cedula }}</td>
+                        <td>{{ estudiante.edad }}</td>
+                        <td>{{ estudiante.get_sexo_display }}</td>
+                        <td>{{ estudiante.nacionalidad }}</td>
+                        <td>
+                            <a href="{% url 'calificaciones:editar_estudiante' estudiante.id_estudiante %}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'calificaciones:generar_reporte_pdf' estudiante.id_estudiante %}" class="btn btn-sm btn-info" target="_blank">
+                                <i class="fas fa-file-pdf"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarModal{{ estudiante.id_estudiante }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            
+                            <!-- Modal de confirmación -->
+                            <div class="modal fade" id="eliminarModal{{ estudiante.id_estudiante }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Confirmar Eliminación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Estás seguro de eliminar al estudiante <strong>{{ estudiante.nombres_completos }}</strong>?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form method="post" action="{% url 'calificaciones:eliminar_estudiante' estudiante.id_estudiante %}">
+                                                {% csrf_token %}
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No hay estudiantes registrados.
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="card-footer">
+        <small class="text-muted">Total: {{ estudiantes.count }} estudiantes</small>
+    </div>
+</div>
+{% endblock %}

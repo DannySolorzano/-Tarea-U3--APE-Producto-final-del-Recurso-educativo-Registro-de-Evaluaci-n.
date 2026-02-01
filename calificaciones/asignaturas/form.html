@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }} - GesInfra{% endblock %}
+{% block page_icon %}fa-book{% endblock %}
+{% block page_title %}{{ titulo }}{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'calificaciones:lista_asignaturas' %}">Asignaturas</a></li>
+<li class="breadcrumb-item active">{{ titulo }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Formulario de Asignatura</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Asignatura *</label>
+                            {{ form.nombre }}
+                            {% if form.nombre.errors %}
+                            <div class="text-danger">{{ form.nombre.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Docente</label>
+                            {{ form.docente }}
+                            {% if form.docente.errors %}
+                            <div class="text-danger">{{ form.docente.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Horas Semanales *</label>
+                            {{ form.horas_semanales }}
+                            {% if form.horas_semanales.errors %}
+                            <div class="text-danger">{{ form.horas_semanales.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">Número de horas por semana</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg me-2">
+                        <i class="fas fa-save me-2"></i>Guardar Asignatura
+                    </button>
+                    <a href="{% url 'calificaciones:lista_asignaturas' %}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
